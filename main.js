@@ -1,29 +1,40 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize Lucide Icons
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
+
     // Mobile Menu Toggle (Simplified for now)
     const mobileToggle = document.querySelector('.mobile-toggle');
     const navMenu = document.querySelector('.nav-menu');
     const navLinks = document.querySelectorAll('.nav-menu a');
     
-    if (mobileToggle) {
+    if (mobileToggle && navMenu) {
         mobileToggle.addEventListener('click', () => {
             navMenu.classList.toggle('active');
-            const icon = mobileToggle.querySelector('i');
-            if (navMenu.classList.contains('active')) {
-                icon.setAttribute('data-lucide', 'x');
-            } else {
-                icon.setAttribute('data-lucide', 'menu');
+            const isOpened = navMenu.classList.contains('active');
+            
+            // Toggle icon robustly
+            mobileToggle.innerHTML = isOpened ? '<i data-lucide="x"></i>' : '<i data-lucide="menu"></i>';
+            
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
             }
-            lucide.createIcons();
         });
     }
 
     // Close menu when clicking links
     navLinks.forEach(link => {
         link.addEventListener('click', () => {
-            navMenu.classList.remove('active');
-            const icon = mobileToggle.querySelector('i');
-            icon.setAttribute('data-lucide', 'menu');
-            lucide.createIcons();
+            if (navMenu) {
+                navMenu.classList.remove('active');
+                if (mobileToggle) {
+                    mobileToggle.innerHTML = '<i data-lucide="menu"></i>';
+                    if (typeof lucide !== 'undefined') {
+                        lucide.createIcons();
+                    }
+                }
+            }
         });
     });
 
